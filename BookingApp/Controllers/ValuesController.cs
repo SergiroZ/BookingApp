@@ -22,7 +22,7 @@ namespace BookingApp.Controllers
 
         public Book GetBook(int id)
         {
-            Book book = db.Books.Find(id);
+            var book = db.Books.Find(id);
             return book;
         }
 
@@ -36,22 +36,17 @@ namespace BookingApp.Controllers
         [HttpPut]
         public void EditBook(int id, [FromBody]Book book)
         {
-            if (id == book.Id)
-            {
-                db.Entry(book).State = EntityState.Modified;
-
-                db.SaveChanges();
-            }
+            if (id != book.Id) return;
+            db.Entry(book).State = EntityState.Modified;
+            db.SaveChanges();
         }
 
         public void DeleteBook(int id)
         {
-            Book book = db.Books.Find(id);
-            if (book != null)
-            {
-                db.Books.Remove(book);
-                db.SaveChanges();
-            }
+            var book = db.Books.Find(id);
+            if (book == null) return;
+            db.Books.Remove(book);
+            db.SaveChanges();
         }
         protected override void Dispose(bool disposing)
         {
